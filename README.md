@@ -54,11 +54,16 @@ root@127.0.0.1:61019/movr> show tables;
 Time: 11ms total (execution 11ms / network 0ms)
 
 ```
+If you decide to start a local single node clusture, here is how it will look like:![look like](../assets/CRDB-Single-Node.png)
 
 ## Create a simple Mule project
 
 ### Create sample mule project with http listener
 Lets keep this simple as well, we will expose a sample /test endpoint which will query a row from the database and respond as JSON payload.
+
+Here is how it looks like:
+
+![look like](../assets/project.png)
 
 ### Configure Generic DB connector
 
@@ -67,8 +72,8 @@ We will pretend CRDB is nothing but PostgreSQL for which we can get the [JDBC dr
 
 The driver dependency:
 
-
-    	<dependency>
+    	
+	    <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.19.jre7</version>
@@ -99,8 +104,13 @@ This gave me some hard time to figure out the correct connection string and othe
 		<db:generic-connection url="jdbc:postgresql://127.0.0.1:61019/movr" driverClassName="org.postgresql.Driver" user="root" password="admin"/>
 	</db:config>
 ```
+Here is how it looks like:
 
-### Configure Generic DB connector
+![look like](../assets/db-connector-config.png)
+
+### DB connector details and query
+
+I kept this to the basics as well:
 
 ```xml
 
@@ -109,3 +119,19 @@ This gave me some hard time to figure out the correct connection string and othe
 </db:select>
 
 ```
+
+Here is how it looks like:
+
+![look like](../assets/db-connector-info.png)
+
+## The moment of joy!
+
+### Test
+Test in any tool of choice, mine is Postman.
+Here is how it looks like:
+
+![look like](../assets/Test-result-postman.png)
+
+Console Output:
+
+![look like](../assets/console-output.png)
