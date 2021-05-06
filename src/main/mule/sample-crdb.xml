@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="49003-HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7fccc4ae-9aaf-4404-aaba-17911ddfd1e0" >
+		<http:listener-connection host="0.0.0.0" port="49003" />
+	</http:listener-config>
+	<db:config name="crdb_Database_Config" doc:name="Database Config" doc:id="62262d47-001c-42f8-91f7-13527f592632" >
+		<db:generic-connection url="jdbc:postgresql://127.0.0.1:61019/movr" driverClassName="org.postgresql.Driver" user="root" password="admin"/>
+	</db:config>
+	<flow name="samplecrdbFlow" doc:id="cc44d80a-5382-42b1-b49f-09a702df8bfe" >
+		<http:listener doc:name="Listener" doc:id="06a02bae-4277-4b0c-bc27-a0cc90a3d0b2" config-ref="49003-HTTP_Listener_config" path="/test"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2e1a5565-5831-4c61-b1d7-e0d98bfc22d1" message="before db call"/>
+		<db:select doc:name="Select" doc:id="b2b2798a-c4f8-4c6f-9e0b-d82f8b7e3b64" config-ref="crdb_Database_Config">
+			<db:sql ><![CDATA[select city from vehicles where id='aaaaaaaa-aaaa-4800-8000-00000000000a']]></db:sql>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="dea99f6c-b7b1-47b4-b185-4092ff3df1ba" message="after db call"/>
+		<ee:transform doc:name="Transform Message" doc:id="7458a41a-7332-4aa8-9fb0-b37aeb4d7b84" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+	payload
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
